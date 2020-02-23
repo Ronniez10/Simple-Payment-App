@@ -48,7 +48,7 @@ public class MainResource {
         log.info("List Size="+accounts.size());
         model.addAttribute("accounts",accounts);
 
-        return "hello";
+        return "homepage";
     }
 
     @GetMapping("/v1/customer/viewTransactions")
