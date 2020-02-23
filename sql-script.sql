@@ -1,35 +1,36 @@
 
-use `moviedb`;
+use `simple-payment`;
 
-DROP TABLE IF EXISTS `course`;
+DROP TABLE IF EXISTS `accounts`;
 
-CREATE TABLE `userRating` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,user_ratingratings
-  `username` varchar(128) DEFAULT NULL,
+CREATE TABLE `accounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) DEFAULT NULL,
+  `balance`float
   
   
-  PRIMARY KEY (`user_id`),
+  PRIMARY KEY (`id`),
   
-  UNIQUE KEY `TITLE_UNIQUE` (`username`)
+  UNIQUE KEY `TITLE_UNIQUE` (`name`)
  
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
-use `moviedb`;
+use `simple-payment`;
 
-CREATE TABLE `ratings` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `movie_id` varchar(256) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+CREATE TABLE `transactions` (
+  `trans_id` int(11) NOT NULL AUTO_INCREMENT,
+  `trans_type` varchar(256) NOT NULL,
+  `amount` float  NOT NULL,
+  `account_id` int(11) NOT NULL
 
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`trans_id`),
 
-  KEY `FK_USER_ID_idx` (`user_id`),
+  KEY `FK_USER_ID_idx` (`account_id`),
 
-  CONSTRAINT `FK_USER` 
-  FOREIGN KEY (`user_id`) 
-  REFERENCES `userrating` (`user_id`) 
+  CONSTRAINT `FK_ACCOUNT` 
+  FOREIGN KEY (`account_id`) 
+  REFERENCES `accounts` (`id`) 
 
   ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
-DROP TABLE ratings;
