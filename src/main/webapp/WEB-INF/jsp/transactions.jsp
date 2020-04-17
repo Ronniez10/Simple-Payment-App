@@ -35,13 +35,18 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
 
               <tr>
                 <td>${tempTransaction.type}</td>
-                <td>${tempTransaction.amount}</td>
+                <c:if test="${tempTransaction.type == 'CREDIT'}">
+                  <td style="color: green;">+${tempTransaction.amount}</td>
+                </c:if>
+                <c:if test="${tempTransaction.type == 'DEBIT'}">
+                  <td style="color: red;">-${tempTransaction.amount}</td>
+                </c:if>
               </tr>
             </c:forEach>
           </table>
 
           <p>
-            <a href="${pageContext.request.contextPath}/api/v1"
+            <a href="${pageContext.request.contextPath}/api/bank"
               >Back to Homepage</a
             >
           </p>

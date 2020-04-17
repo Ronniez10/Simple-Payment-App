@@ -39,7 +39,7 @@ public class MainResource {
     private RestTemplate restTemplate;
 
 
-    @GetMapping("/v1")
+    @GetMapping("/bank")
     public String getTransactionForUser(Model model)
     {
 
@@ -51,7 +51,7 @@ public class MainResource {
         return "homepage";
     }
 
-    @GetMapping("/v1/customer/viewTransactions")
+    @GetMapping("/bank/customer/viewTransactions")
     public String showTransactions(@RequestParam("accountId") int id, HttpServletRequest request,Model model)
     {
         //String id = request.getParameter("accountId");
@@ -64,26 +64,27 @@ public class MainResource {
         return "transactions";
     }
 
-    @GetMapping("/v1/customer/doTransaction")
+    @GetMapping("/bank/customer/doTransaction")
     public String doTransaction(@RequestParam("accountId") int id,Model model)
     {
         Accounts accounts;
         TransactionForm transactionForm=null;
         Optional<Accounts> ac = accountsRepository.findById(id);
-
+        double availableBalance=0;
         if(ac.isPresent()) {
             accounts = ac.get();
-
+             availableBalance = accounts.getBalance();
              transactionForm = new TransactionForm();
             transactionForm.setFrom(accounts.getName());
         }
 
         model.addAttribute("transactionForm",transactionForm);
+        model.addAttribute("availableBalance",availableBalance);
 
         return "transaction-form";
     }
 
-    @PostMapping("/v1/customer/doTransaction")
+    @PostMapping("/bank/customer/doTransaction")
     public String performTransaction(@ModelAttribute("transactionForm") TransactionForm transactionForm)
     {
         log.info("From ="+transactionForm.getFrom());
@@ -97,7 +98,7 @@ public class MainResource {
             return "redirect:/api/v1?success";
         }
         else {
-            return "redirect:/api/v1?failed";
+            return "redirect:/api/bank?failed";
         }
     }
 
