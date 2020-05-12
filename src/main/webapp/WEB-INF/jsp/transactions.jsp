@@ -23,26 +23,36 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
       <div id="container">
         <div id="content">
           <!-- Add a Button for Adding Customers -->
-
-          <table>
-            <tr>
+          <div class="row">
+            <h3 style="text-align: left;">
+              <u>Account Holder's Name:</u> <i>${accountName}</i>
+              <span style="float: right;">
+                <u> Avaialble Balance:</u><i>${accountBalance} INR</i>
+              </span>
+            </h3>
+          </div>
+          <table class="table">
+            <thead>
               <th>Transaction Type(CREDIT/DEBIT)</th>
               <th>Transaction Amount</th>
-            </tr>
+            </thead>
 
-            <c:forEach var="tempTransaction" items="${transactions}">
-              <!--  Constructing an Update Link -->
-
-              <tr>
-                <td>${tempTransaction.type}</td>
-                <c:if test="${tempTransaction.type == 'CREDIT'}">
-                  <td style="color: green;">+${tempTransaction.amount}</td>
-                </c:if>
-                <c:if test="${tempTransaction.type == 'DEBIT'}">
-                  <td style="color: red;">-${tempTransaction.amount}</td>
-                </c:if>
-              </tr>
-            </c:forEach>
+            <tbody>
+              <c:forEach var="tempTransaction" items="${transactions}">
+                <tr>
+                  <!--  Constructing an Update Link -->
+                  <td style="font-style: italic;">${tempTransaction.type}</td>
+                  <c:if test="${tempTransaction.type == 'CREDIT'}">
+                    <td style="color: green;">
+                      +${tempTransaction.amount} INR
+                    </td>
+                  </c:if>
+                  <c:if test="${tempTransaction.type == 'DEBIT'}">
+                    <td style="color: red;">-${tempTransaction.amount} INR</td>
+                  </c:if>
+                </tr>
+              </c:forEach>
+            </tbody>
           </table>
 
           <p>

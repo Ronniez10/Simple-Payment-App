@@ -26,7 +26,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
       </div>
 
       <div id="container">
-        <div id="content">
+        <div class="content col-xs-12">
           <c:if test="${param.success != null}">
             <div class="alert alert-success">
               Transaction was Successful
@@ -38,15 +38,17 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
               Transaction Failed due to Insufficient Funds. Please Try Again
             </div>
           </c:if>
-
-          <table>
-            <tr>
-              <th>Account Holder's Name</th>
-              <th>Balance</th>
-              <th>Phone Number</th>
-              <th>Transaction History</th>
-              <th>Transfer Funds</th>
-            </tr>
+          <!--<div class="table-responsive">-->
+          <table class="table table-hover">
+			<div >
+				<thead class="thead-light ">
+				<th>Account Holder's Name</th>
+				<th>Balance</th>
+				<th>Phone Number</th>
+				<th>Transaction History</th>
+				<th>Transfer Funds</th>
+				</thead>
+			</div>
 
             <c:forEach var="tempAccount" items="${accounts}">
               <c:url
@@ -59,7 +61,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
               <c:url var="doTransaction" value="bank/customer/doTransaction">
                 <c:param name="accountId" value="${tempAccount.id }" />
               </c:url>
-
+			  <tbody>
               <tr>
                 <td>${tempAccount.name}</td>
                 <td style="font-weight: bold;">${tempAccount.balance} INR</td>
@@ -68,9 +70,11 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
                 </td>
                 <td><a href="${viewTransactions }">View Transactions</a></td>
                 <td><a href="${doTransaction }">Transfer</a></td>
-              </tr>
-            </c:forEach>
+			  </tr>
+			</c:forEach>
+			</tbody>
           </table>
+          <!-- </div>-->
         </div>
       </div>
     </div>

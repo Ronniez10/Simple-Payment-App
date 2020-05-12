@@ -13,6 +13,10 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     />
+    <style>
+
+    	.error{color:red}
+    </style>
   </head>
   <body>
     <div id="wrapper">
@@ -44,13 +48,22 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
 
             <tr>
               <td><label>To Name:</label></td>
-              <td><form:input path="to" /></td>
+              <td>
+                    <form:select path="to">
+                   	<form:options items="${options}" />
+                  	</form:select>
+              </td>
             </tr>
 
-            <tr>
-              <td><label>Amount:</label></td>
-              <td><form:input path="amount" /></td>
-            </tr>
+
+
+                <tr>
+                  <td><label>Amount:</label></td>
+                  <td><form:input path="amount" /></td>
+                  <form:errors path="amount" cssClass="error"/>
+                </tr>
+
+
 
             <tr>
               <td><label></label></td>

@@ -7,18 +7,23 @@ import com.neelav.simplepaymentapp.model.Transactions;
 import com.neelav.simplepaymentapp.repository.AccountsRepository;
 import com.neelav.simplepaymentapp.repository.TransactionsRepository;
 import com.neelav.simplepaymentapp.service.AccountService;
-import com.neelav.simplepaymentapp.service.AccountServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api")
@@ -52,14 +57,26 @@ public class MainResource {
     }
 
     @GetMapping("/bank/customer/viewTransactions")
-    public String showTransactions(@RequestParam("accountId") int id, HttpServletRequest request,Model model)
-    {
+    public String showTransactions(@RequestParam("accountId") int id, HttpServletRequest request,Model model) throws IllegalAccessException {
         //String id = request.getParameter("accountId");
         log.info("Customer Id:"+id);
+
+        Optional<Accounts> account = accountsRepository.findById(id);
+        Accounts ac = null;
+        if(account.isPresent())
+        {
+            ac = account.get();
+        }
+        else
+        {
+            throw new IllegalAccessException("Not Available Account");
+        }
 
         List<Transactions> transactions = transactionsRepository.findByAccountsId(id);
 
         model.addAttribute("transactions",transactions);
+        model.addAttribute("accountName",ac.getName());
+        model.addAttribute("accountBalance",ac.getBalance());
 
         return "transactions";
     }
@@ -67,26 +84,60 @@ public class MainResource {
     @GetMapping("/bank/customer/doTransaction")
     public String doTransaction(@RequestParam("accountId") int id,Model model)
     {
-        Accounts accounts;
-        TransactionForm transactionForm=null;
+        Accounts accounts = null;
+        TransactionForm transactionForm = null;
         Optional<Accounts> ac = accountsRepository.findById(id);
-        double availableBalance=0;
-        if(ac.isPresent()) {
+        double availableBalance = 0;
+        if (ac.isPresent()) {
             accounts = ac.get();
-             availableBalance = accounts.getBalance();
-             transactionForm = new TransactionForm();
+            availableBalance = accounts.getBalance();
+            transactionForm = new TransactionForm();
             transactionForm.setFrom(accounts.getName());
         }
 
-        model.addAttribute("transactionForm",transactionForm);
-        model.addAttribute("availableBalance",availableBalance);
+        final Accounts temp = ac.get();
 
-        return "transaction-form";
+        List<String> options =
+                accountsRepository.findAll().
+                        stream().map(account -> account.getName()).
+                        filter(name -> !name.equals(temp.getName())).collect(Collectors.toList());
+        
+        if(!model.containsAttribute("transactionForm")) {
+
+
+            model.addAttribute("transactionForm", transactionForm);
+            model.addAttribute("availableBalance", availableBalance);
+            model.addAttribute("options", options);
+
+            return "transaction-form";
+
+        }
+        else
+        {
+            model.addAttribute("availableBalance", availableBalance);
+            model.addAttribute("options", options);
+
+            return "transaction-form";
+        }
+
+
     }
 
     @PostMapping("/bank/customer/doTransaction")
-    public String performTransaction(@ModelAttribute("transactionForm") TransactionForm transactionForm)
+    public String performTransaction(@Valid @ModelAttribute("transactionForm") TransactionForm transactionForm,
+                                     BindingResult bindingResult, RedirectAttributes attr, HttpSession session)
     {
+        if(bindingResult.hasErrors()) {
+            Optional<Accounts> acc = accountsRepository.findByName(transactionForm.getFrom());
+            Accounts actual = acc.get();
+
+            attr.addFlashAttribute("org.springframework.validation.BindingResult.transactionForm", bindingResult);
+            attr.addFlashAttribute("transactionForm", transactionForm);
+
+            return "redirect:/api/bank/customer/doTransaction?accountId=" +actual.getId();
+            //return "transaction-form";
+        }
+
         log.info("From ="+transactionForm.getFrom());
         log.info("To ="+transactionForm.getTo());
 
@@ -95,7 +146,7 @@ public class MainResource {
         if(b) {
             sendSmsViaTwilio(transactionForm);
 
-            return "redirect:/api/v1?success";
+            return "redirect:/api/bank?success";
         }
         else {
             return "redirect:/api/bank?failed";
@@ -118,9 +169,9 @@ public class MainResource {
             SmsRequest debited = new SmsRequest(debitNumber, debit);
             SmsRequest credited = new SmsRequest(creditNumber, credit);
 
-            restTemplate.postForObject("http://localhost:8080/api/v1/sms", debited, SmsRequest.class);
+            restTemplate.postForObject("http://twilio-messaging-service/api/v1/sms", debited, SmsRequest.class);
 
-            restTemplate.postForObject("http://localhost:8080/api/v1/sms", credited, SmsRequest.class);
+            restTemplate.postForObject("http://twilio-messaging-service/api/v1/sms", credited, SmsRequest.class);
 
 
     }
