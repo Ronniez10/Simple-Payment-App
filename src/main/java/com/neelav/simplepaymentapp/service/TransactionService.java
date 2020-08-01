@@ -1,8 +1,9 @@
 package com.neelav.simplepaymentapp.service;
 
 import com.neelav.simplepaymentapp.model.Accounts;
+import com.neelav.simplepaymentapp.model.Transactions;
 
 public interface TransactionService {
 
-    void createTransaction(double amount, String transactionType, Accounts accounts);
+    Transactions createTransaction(Transactions transactions);
 }

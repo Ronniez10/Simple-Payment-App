@@ -57,7 +57,7 @@ public class MainResource {
     }
 
     @GetMapping("/bank/customer/viewTransactions")
-    public String showTransactions(@RequestParam("accountId") int id, HttpServletRequest request,Model model) throws IllegalAccessException {
+    public String showTransactions(@RequestParam("accountId") int id,Model model) throws IllegalAccessException {
         //String id = request.getParameter("accountId");
         log.info("Customer Id:"+id);
 
@@ -81,6 +81,8 @@ public class MainResource {
         return "transactions";
     }
 
+
+    //Clicking on the Tranfer Button in UI
     @GetMapping("/bank/customer/doTransaction")
     public String doTransaction(@RequestParam("accountId") int id,Model model)
     {
@@ -101,7 +103,7 @@ public class MainResource {
                 accountsRepository.findAll().
                         stream().map(account -> account.getName()).
                         filter(name -> !name.equals(temp.getName())).collect(Collectors.toList());
-        
+
         if(!model.containsAttribute("transactionForm")) {
 
 
