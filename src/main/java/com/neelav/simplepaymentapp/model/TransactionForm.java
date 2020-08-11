@@ -17,6 +17,12 @@ public class TransactionForm {
     public TransactionForm() {
     }
 
+    public TransactionForm(@NotNull(message = "is required") String to, @NotNull(message = "is required") String from, @Min(value = 5, message = "The Transaction Amount must be greater than 5 Dollars !") double amount) {
+        this.to = to;
+        this.from = from;
+        this.amount = amount;
+    }
+
     public String getTo() {
         return to;
     }

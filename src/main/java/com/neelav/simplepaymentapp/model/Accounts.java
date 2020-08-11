@@ -30,6 +30,13 @@ public class Accounts {
     public Accounts() {
     }
 
+    public Accounts(int id, String name, double balance, String phoneNumber) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getName() {
         return name;
     }

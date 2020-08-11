@@ -3,6 +3,7 @@ package com.neelav.simplepaymentapp.service;
 import com.neelav.simplepaymentapp.model.Accounts;
 import com.neelav.simplepaymentapp.model.SmsRequest;
 import com.neelav.simplepaymentapp.model.TransactionForm;
+import com.neelav.simplepaymentapp.model.Transactions;
 import com.neelav.simplepaymentapp.repository.AccountsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +40,10 @@ public class AccountServiceImpl implements AccountService{
             Accounts to = toAC.get();
             if(amt < from.getBalance())
             {
-                transactionService.createTransaction(amt, "CREDIT",to);
-                transactionService.createTransaction(amt,"DEBIT",from);
+                Transactions credit = new Transactions("CREDIT",amt,to);
+                Transactions debit = new Transactions("DEBIT",amt,to);
+                transactionService.createTransaction(credit);
+                transactionService.createTransaction(debit);
 
                 from.setBalance(from.getBalance()-amt);
                 log.info("From Account Balance="+from.getBalance());
