@@ -10,7 +10,6 @@ CREATE TABLE `accounts` (
   
   
   PRIMARY KEY (`id`),
-  
   UNIQUE KEY `TITLE_UNIQUE` (`name`)
  
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;

@@ -1,5 +1,7 @@
 package com.neelav.simplepaymentapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class Accounts {
     @Column(name = "phone")
     private String phoneNumber;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Transactions> transactions;
 

@@ -23,7 +23,6 @@ public class Transactions {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
-    @JsonIgnore
     private Accounts accounts;
 
     public Transactions() {

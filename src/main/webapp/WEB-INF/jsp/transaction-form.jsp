@@ -33,7 +33,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
 
     <div id="Container">
       <h3>Save Customer</h3>
-      <h4><u>Total Available Balance </u>: ${availableBalance} INR</h2>
+      <h4><u>Total Available Balance</u>: ${availableBalance} INR</h2>
       <form:form
         action="doTransaction"
         modelAttribute="transactionForm"
@@ -69,6 +69,8 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
               <td><label></label></td>
               <td><input type="submit" class="btn btn-primary" value="Make Transaction"  /></td>
             </tr>
+
+
           </tbody>
         </table>
       </form:form>
