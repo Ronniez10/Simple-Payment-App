@@ -11,7 +11,7 @@ public class TransactionForm {
     @NotNull(message ="is required")
     private String from;
 
-    @Min(value = 5,message = "The Transaction Amount must be greater than 5 Dollars !")
+    @Min(value = 5,message = "The Transaction Amount must be greater than 5 INR !")
     private double amount;
 
     public TransactionForm() {
