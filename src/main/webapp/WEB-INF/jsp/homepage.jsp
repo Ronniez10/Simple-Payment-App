@@ -18,6 +18,24 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+      </style>
   </head>
   <body>
     <div id="Wrapper">
@@ -35,7 +53,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
       <h2>Welcome ${username}</h2>
       <hr>
 
-      
+
        <span>
         <!--<span style="float: left;">
             <h3>Welcome ${username}</h3>
