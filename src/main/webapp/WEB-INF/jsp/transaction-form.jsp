@@ -76,7 +76,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
       </form:form>
 
       <p>
-        <a href="${pageContext.request.contextPath}/api/bank">Back to Homepage</a>
+        <a href="${pageContext.request.contextPath}/api/bank" class="btn btn-primary btn-lg">Back to Homepage</a>
       </p>
     </div>
   </body>

@@ -49,8 +49,9 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
                 <c:param name="accountId" value="${accountId}" />
       </c:url>
 
-
-      <h2>Welcome ${username}</h2>
+      
+      <h2 style="text-align:center;">Welcome ${username} !</h2>
+     
       <hr>
 
 
@@ -63,7 +64,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
           <h3><a href="${viewTransactions}">View Transactions</a></h3>
       </span>
 
-        <span style="float: center;">
+        <span style="float: ;">
             <h3> Available Balance:<u> ${accountBalance} INR</u>  </h3>
         </span>
        <span>
@@ -124,10 +125,12 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
 			  </tr>
 			</c:forEach>
 			</tbody>
-          </table>
+    </table>
+    <hr>
           <!-- </div>-->
         </div>
       </div>
     </div>
+     <a class="btn btn-danger btn-lg "  href="/logout" style="margin-left:50%;margin-right: 50%;">Logout</a>
   </body>
 </html>
