@@ -17,6 +17,23 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
 
     	.error{color:red}
     </style>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+      </style>
   </head>
   <body>
     <div id="wrapper">
@@ -24,6 +41,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
         <h2>Simple Payment App</h2>
       </div>
     </div>
+    <hr>
 
     <c:if test="${param.failed != null}">
       <div class="alert alert-danger">
@@ -32,6 +50,11 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
     </c:if>
 
     <div id="Container">
+
+      <div id="header">
+      <h2 style="text-align:center;">TRANSFER MONEY</h2>
+    </div>
+      <hr>
       <h4><u>Total Available Balance</u>: ${availableBalance} INR</h2>
       <form:form
         action="doTransaction"

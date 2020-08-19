@@ -38,9 +38,15 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
         <h2>Simple Payment App</h2>
       </div>
 
+      <hr>
+
+
+      <div id="header">
+        <h2 style="text-align:center;">VIEW TRANSACTIONS</h2>
+      </div>
+
       <div id="container">
         <div id="content">
-          <!-- Add a Button for Adding Customers -->
           <div class="row">
             <h3 style="text-align: left;">
               <u>Account Holder's Name:</u> <i>${accountName}</i>

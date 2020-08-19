@@ -48,9 +48,10 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
                 value="bank/customer/viewTransactions" >
                 <c:param name="accountId" value="${accountId}" />
       </c:url>
-
-      
-      <h2 style="text-align:center;">Welcome ${username} !</h2>
+      <hr>
+      <div id="header">
+          <h2 style="text-align:center;">Welcome ${username} !</h2>
+      </div>
      
       <hr>
 
@@ -64,7 +65,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
           <h3><a href="${viewTransactions}">View Transactions</a></h3>
       </span>
 
-        <span style="float: ;">
+        <span style="float:left ;">
             <h3> Available Balance:<u> ${accountBalance} INR</u>  </h3>
         </span>
        <span>
