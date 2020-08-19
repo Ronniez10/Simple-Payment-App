@@ -126,32 +126,28 @@ public class MainResource {
 
     //Clicking on the Tranfer Button in UI
     @GetMapping("/api/bank/customer/doTransaction")
-    public String doTransaction(@RequestParam("accountId") int id,Model model)
+    public String doTransaction(@RequestParam("accountId") int id,Model model,Principal principal)
     {
-        Accounts accounts = null;
-        TransactionForm transactionForm = null;
-        Optional<Accounts> ac = accountsRepository.findById(id);
-        double availableBalance = 0;
-        if (ac.isPresent()) {
-            accounts = ac.get();
-            availableBalance = accounts.getBalance();
-            transactionForm = new TransactionForm();
-            transactionForm.setFrom(accounts.getName());
-        }
 
-        final Accounts temp = ac.get();
+        TransactionForm transactionForm = new TransactionForm();
+        Accounts fromAccount = accountsRepository.findByName(principal.getName()).get();
 
-        List<String> options =
-                accountsRepository.findAll().
-                        stream().map(account -> account.getName()).
-                        filter(name -> !name.equals(temp.getName())).collect(Collectors.toList());
+        log.info("Account Details="+fromAccount);
+
+        double availableBalance = fromAccount.getBalance();
+
+        Accounts toAccount =accountsRepository.findById(id).get();
+
+        transactionForm.setFrom(fromAccount.getName());
+        transactionForm.setTo(toAccount.getName());
+
+
 
         if(!model.containsAttribute("transactionForm")) {
 
 
             model.addAttribute("transactionForm", transactionForm);
             model.addAttribute("availableBalance", availableBalance);
-            model.addAttribute("options", options);
 
             return "transaction-form";
 
@@ -159,12 +155,9 @@ public class MainResource {
         else
         {
             model.addAttribute("availableBalance", availableBalance);
-            model.addAttribute("options", options);
 
             return "transaction-form";
         }
-
-
     }
 
     @PostMapping("/api/bank/customer/doTransaction")

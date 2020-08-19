@@ -32,7 +32,6 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
     </c:if>
 
     <div id="Container">
-      <h3>Save Customer</h3>
       <h4><u>Total Available Balance</u>: ${availableBalance} INR</h2>
       <form:form
         action="doTransaction"
@@ -43,15 +42,17 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
           <tbody>
             <tr>
               <td><label>From Name:</label></td>
-              <td><form:input path="from" readonly="true" style="font-family:'Helvetica';font-weight: bold;" /></td>
+              <td><form:input path="from" 
+                readonly="true" 
+                style="font-family:'Helvetica';font-weight: bold;" /></td>
             </tr>
 
             <tr>
               <td><label>To Name:</label></td>
               <td>
-                    <form:select path="to">
-                   	<form:options items="${options}" />
-                  	</form:select>
+                <form:input path="to" 
+                readonly="true"
+                 style="font-family:'Helvetica';font-weight: bold;" />   
               </td>
             </tr>
 
@@ -64,13 +65,13 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
                 </tr>
 
 
-
             <tr>
+              <hr>
               <td><label></label></td>
               <td><input type="submit" class="btn btn-primary" value="Make Transaction"  /></td>
             </tr>
 
-
+          
           </tbody>
         </table>
       </form:form>
