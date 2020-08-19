@@ -18,7 +18,6 @@ public class TransactionServiceImpl implements TransactionService{
 
     public Transactions createTransaction(Transactions transactions)
     {
-        System.out.println("We Got Here Broooooooooooo");
         log.info("Amount="+transactions.getAmount());
         log.info("Transaction Type= "+transactions.getType());
         log.info("Account="+transactions.getAccounts());

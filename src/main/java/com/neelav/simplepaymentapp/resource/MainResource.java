@@ -21,12 +21,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/api")
 public class MainResource {
 
     private static Logger log = LoggerFactory.getLogger(MainResource.class);
@@ -44,19 +44,61 @@ public class MainResource {
     private RestTemplate restTemplate;
 
 
-    @GetMapping("/bank")
-    public String getTransactionForUser(Model model)
+    @GetMapping("/")
+    public String defaultHome()
     {
+        return "redirect:/api/bank";
+    }
 
+
+    @GetMapping("/api/bank")
+    public String getTransactionForUser(Model model, Principal principal)
+    {
+        log.info("Current Logged in Username: "+principal.getName());
         List<Accounts> accounts = accountsRepository.findAll();
 
+        List<Accounts> displayAccounts= accounts.stream().filter(account -> !account.getName()
+                .equals(principal.getName())).collect(Collectors.toList());
+
         log.info("List Size="+accounts.size());
-        model.addAttribute("accounts",accounts);
+
+
+        boolean accoutnExists= accounts.stream().anyMatch(account -> account.getName().equals(principal.getName()));
+        double availableBalance=0;
+        int accountId =0;
+        if(!principal.getName().equals("admin")) {
+            Accounts loggedInAccount = accountsRepository.findByName(principal.getName()).get();
+            availableBalance = loggedInAccount.getBalance();
+            accountId = loggedInAccount.getId();
+        }
+
+        model.addAttribute("accounts",displayAccounts);
+        model.addAttribute("username",principal.getName());
+        model.addAttribute("accountBalance",availableBalance);
+        model.addAttribute("accountId",accountId);
 
         return "homepage";
     }
 
-    @GetMapping("/bank/customer/viewTransactions")
+    @GetMapping("/api/bank/customer")
+    public String getAccountDetails(@RequestParam("accountId") int id,Model model)
+    {
+        Optional<Accounts> acc = accountsRepository.findById(id);
+
+        Accounts accounts;
+        if(acc.isPresent())
+             accounts = acc.get();
+        else
+            throw new NullPointerException();
+
+        log.info("Account Details are:"+acc);
+
+        model.addAttribute("accountDetails",accounts);
+
+        return "accountDetails";
+    }
+
+    @GetMapping("/api//bank/customer/viewTransactions")
     public String showTransactions(@RequestParam("accountId") int id,Model model) throws IllegalAccessException {
         //String id = request.getParameter("accountId");
         log.info("Customer Id:"+id);
@@ -83,7 +125,7 @@ public class MainResource {
 
 
     //Clicking on the Tranfer Button in UI
-    @GetMapping("/bank/customer/doTransaction")
+    @GetMapping("/api/bank/customer/doTransaction")
     public String doTransaction(@RequestParam("accountId") int id,Model model)
     {
         Accounts accounts = null;
@@ -125,7 +167,7 @@ public class MainResource {
 
     }
 
-    @PostMapping("/bank/customer/doTransaction")
+    @PostMapping("/api/bank/customer/doTransaction")
     public String performTransaction(@Valid @ModelAttribute("transactionForm") TransactionForm transactionForm,
                                      BindingResult bindingResult, RedirectAttributes attr, HttpSession session)
     {
@@ -140,8 +182,8 @@ public class MainResource {
             //return "transaction-form";
         }
 
-        log.info("From ="+transactionForm.getFrom());
-        log.info("To ="+transactionForm.getTo());
+        log.info("From  Customer Name="+transactionForm.getFrom());
+        log.info("To Customer Name ="+transactionForm.getTo());
 
         boolean b=accountService.updateAccounts(transactionForm);
 

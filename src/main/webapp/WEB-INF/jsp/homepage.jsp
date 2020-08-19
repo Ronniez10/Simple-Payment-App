@@ -25,6 +25,32 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
         <h2>Simple Payment App</h2>
       </div>
 
+      <c:url
+                var="viewTransactions"
+                value="bank/customer/viewTransactions" >
+                <c:param name="accountId" value="${accountId}" />
+      </c:url>
+
+
+      <h2>Welcome ${username}</h2>
+      <hr>
+
+      
+       <span>
+        <!--<span style="float: left;">
+            <h3>Welcome ${username}</h3>
+        </span>-->
+
+        <span style="float: right;">
+          <h3><a href="${viewTransactions}">View Transactions</a></h3>
+      </span>
+
+        <span style="float: center;">
+            <h3> Available Balance:<u> ${accountBalance} INR</u>  </h3>
+        </span>
+       <span>
+
+
       <div id="container">
         <div class="content col-xs-12">
           <c:if test="${param.success != null}">
@@ -43,33 +69,40 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
 			<div >
 				<thead class="thead-light ">
 				<th>Account Holder's Name</th>
-				<th>Balance</th>
+				<!--<th>Balance</th>-->
 				<th>Phone Number</th>
-				<th>Transaction History</th>
-				<th>Transfer Funds</th>
+				<!--<th>Transaction History</th>-->
+        <th>Transfer Funds</th>
+        <th>Account Details</th>
 				</thead>
 			</div>
 
             <c:forEach var="tempAccount" items="${accounts}">
-              <c:url
+              <!--<c:url
                 var="viewTransactions"
                 value="bank/customer/viewTransactions"
               >
                 <c:param name="accountId" value="${tempAccount.id }" />
-              </c:url>
+              </c:url>-->
 
               <c:url var="doTransaction" value="bank/customer/doTransaction">
+                <c:param name="accountId" value="${tempAccount.id }" />
+              </c:url>
+
+              <c:url var="accountDetails" value="bank/customer/">
                 <c:param name="accountId" value="${tempAccount.id }" />
               </c:url>
 			  <tbody>
               <tr>
                 <td>${tempAccount.name}</td>
-                <td style="font-weight: bold;">${tempAccount.balance} INR</td>
+                <!--<td style="font-weight: bold;">${tempAccount.balance} INR</td>-->
                 <td style="font-style: italic;">
                   ${tempAccount.phoneNumber}
                 </td>
-                <td><a href="${viewTransactions }">View Transactions</a></td>
-                <td><a href="${doTransaction }">Transfer</a></td>
+                <!--<td><a href="${viewTransactions }">View Transactions</a></td> -->
+                <td><a href="${doTransaction }">Transfer Money</a></td>
+                <td><a href="${accountDetails }">View Account Details</a></td>
+                
 			  </tr>
 			</c:forEach>
 			</tbody>

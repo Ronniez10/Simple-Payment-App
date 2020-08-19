@@ -13,6 +13,24 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     />
+
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+      </style>
   </head>
   <body>
     <div id="Wrapper">
@@ -54,10 +72,9 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
               </c:forEach>
             </tbody>
           </table>
-
           <p>
             <a href="${pageContext.request.contextPath}/api/bank"
-              >Back to Homepage</a
+              > Back to Homepage</a
             >
           </p>
         </div>

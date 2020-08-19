@@ -17,11 +17,24 @@ public class Accounts {
     @Column(name="name")
     private  String name;
 
+    @Column(name="bank")
+    private String bankName;
+
+    @Column(name="account_number")
+    private int accountNumber;
+
     @Column(name="balance")
     private double balance;
 
     @Column(name = "phone")
     private String phoneNumber;
+
+    @Column(name="account_type")
+    private String accountType;
+
+    @Column(name="branch_name")
+    private String branchName;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -77,14 +90,51 @@ public class Accounts {
         this.transactions = transactions;
     }
 
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(int accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
     @Override
     public String toString() {
         return "Accounts{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", bankName='" + bankName + '\'' +
+                ", accountNumber=" + accountNumber +
                 ", balance=" + balance +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", accountType='" + accountType + '\'' +
+                ", branchName='" + branchName + '\'' +
                 ", transactions=" + transactions +
                 '}';
     }
+
 }

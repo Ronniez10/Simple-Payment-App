@@ -41,7 +41,7 @@ public class AccountServiceImpl implements AccountService{
             if(amt < from.getBalance())
             {
                 Transactions credit = new Transactions("CREDIT",amt,to);
-                Transactions debit = new Transactions("DEBIT",amt,to);
+                Transactions debit = new Transactions("DEBIT",amt,from);
                 transactionService.createTransaction(credit);
                 transactionService.createTransaction(debit);
 
