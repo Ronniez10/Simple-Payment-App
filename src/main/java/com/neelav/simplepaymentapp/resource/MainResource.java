@@ -80,7 +80,7 @@ public class MainResource {
         return "homepage";
     }
 
-    @GetMapping("/api/bank/customer")
+    /*@GetMapping("/api/bank/customer")
     public String getAccountDetails(@RequestParam("accountId") int id,Model model)
     {
         Optional<Accounts> acc = accountsRepository.findById(id);
@@ -96,8 +96,9 @@ public class MainResource {
         model.addAttribute("accountDetails",accounts);
 
         return "accountDetails";
-    }
+    }*/
 
+    //Called when the "View Transactions" mesage is called on the Homepage
     @GetMapping("/api//bank/customer/viewTransactions")
     public String showTransactions(@RequestParam("accountId") int id,Model model) throws IllegalAccessException {
         //String id = request.getParameter("accountId");
@@ -124,7 +125,7 @@ public class MainResource {
     }
 
 
-    //Clicking on the Tranfer Button in UI
+    //Clicking on the Transfer Button in UI
     @GetMapping("/api/bank/customer/doTransaction")
     public String doTransaction(@RequestParam("accountId") int id,Model model,Principal principal)
     {
@@ -160,6 +161,7 @@ public class MainResource {
         }
     }
 
+    //Method which is called on the Form Submission of a Transaction
     @PostMapping("/api/bank/customer/doTransaction")
     public String performTransaction(@Valid @ModelAttribute("transactionForm") TransactionForm transactionForm,
                                      BindingResult bindingResult, RedirectAttributes attr, HttpSession session)
@@ -190,6 +192,7 @@ public class MainResource {
         }
     }
 
+    //Calling the Twilio Micriservice Via Rest Template ,the messages to be delivered are formed in the method itself.
     private void sendSmsViaTwilio(TransactionForm transactionForm) {
 
 
