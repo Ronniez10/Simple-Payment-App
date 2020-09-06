@@ -16,11 +16,11 @@ public class TransactionServiceImpl implements TransactionService{
     @Autowired
     private TransactionsRepository transactionsRepository;
 
-    public void createTransaction(double amount, String transactionType, Accounts accounts)
+    public Transactions createTransaction(Transactions transactions)
     {
-        log.info("Amount="+amount);
-        log.info("Transaction Type= "+ transactionType);
-        log.info("Account="+accounts);
-        transactionsRepository.save(new Transactions(transactionType,amount,accounts));
+        log.info("Amount="+transactions.getAmount());
+        log.info("Transaction Type= "+transactions.getType());
+        log.info("Account="+transactions.getAccounts());
+        return  transactionsRepository.save(transactions);
     }
 }
