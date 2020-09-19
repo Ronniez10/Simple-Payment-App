@@ -51,6 +51,7 @@ public class MainResource {
     private MessageService messageService;
 
 
+    //Redirecting the User to Homepage
     @GetMapping("/")
     public String defaultHome()
     {
@@ -58,6 +59,7 @@ public class MainResource {
     }
 
 
+    //This the Homepage Controller Method
     @GetMapping("/api/bank")
     public String getTransactionForUser(Model model, Principal principal)
     {
