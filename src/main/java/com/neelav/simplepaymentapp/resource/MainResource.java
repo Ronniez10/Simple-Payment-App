@@ -7,6 +7,7 @@ import com.neelav.simplepaymentapp.model.Transactions;
 import com.neelav.simplepaymentapp.repository.AccountsRepository;
 import com.neelav.simplepaymentapp.repository.TransactionsRepository;
 import com.neelav.simplepaymentapp.service.AccountService;
+import com.neelav.simplepaymentapp.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,6 +46,9 @@ public class MainResource {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private MessageService messageService;
 
 
     //Redirecting the User to Homepage
@@ -82,7 +89,7 @@ public class MainResource {
         return "homepage";
     }
 
-    /*@GetMapping("/api/bank/customer")
+    @GetMapping("/api/bank/customer")
     public String getAccountDetails(@RequestParam("accountId") int id,Model model)
     {
         Optional<Accounts> acc = accountsRepository.findById(id);
@@ -98,7 +105,7 @@ public class MainResource {
         model.addAttribute("accountDetails",accounts);
 
         return "accountDetails";
-    }*/
+    }
 
     //Called when the "View Transactions" mesage is called on the Homepage
     @GetMapping("/api//bank/customer/viewTransactions")
@@ -166,8 +173,7 @@ public class MainResource {
     //Method which is called on the Form Submission of a Transaction
     @PostMapping("/api/bank/customer/doTransaction")
     public String performTransaction(@Valid @ModelAttribute("transactionForm") TransactionForm transactionForm,
-                                     BindingResult bindingResult, RedirectAttributes attr, HttpSession session)
-    {
+                                     BindingResult bindingResult, RedirectAttributes attr, HttpSession session) throws InterruptedException {
         if(bindingResult.hasErrors()) {
             Optional<Accounts> acc = accountsRepository.findByName(transactionForm.getFrom());
             Accounts actual = acc.get();
@@ -185,7 +191,20 @@ public class MainResource {
         boolean b=accountService.updateAccounts(transactionForm);
 
         if(b) {
-            sendSmsViaTwilio(transactionForm);
+
+            ExecutorService executorService = Executors.newCachedThreadPool();
+
+            //List<MessageSender> senderList = new ArrayList<>();
+            String debitNumber = accountsRepository.findByName(transactionForm.getFrom()).get().getPhoneNumber();
+            String creditNumber = accountsRepository.findByName(transactionForm.getTo()).get().getPhoneNumber();
+
+            messageService.sendSms("Debit",debitNumber,transactionForm.getAmount());
+            messageService.sendSms("Credit",creditNumber,transactionForm.getAmount());
+
+            /*senderList.add( new MessageSender("Debit",transactionForm.getAmount(),debitNumber));
+            senderList.add( new MessageSender("Credit",transactionForm.getAmount(),creditNumber));
+
+           executorService.invokeAll(senderList);*/
 
             return "redirect:/api/bank?success";
         }
@@ -194,27 +213,36 @@ public class MainResource {
         }
     }
 
-    //Calling the Twilio Micriservice Via Rest Template ,the messages to be delivered are formed in the method itself.
-    private void sendSmsViaTwilio(TransactionForm transactionForm) {
+    //InnerClass for Sending Smses
+    class MessageSender implements Callable<SmsRequest> {
 
+        private String type;
+        private String phoneNumber;
+        private double amount;
 
-            String debit = "Your Account has been debited by $" + transactionForm.getAmount() + " for a Transaction made on the Simple " +
+        private MessageSender()
+        {
+
+        }
+
+        private MessageSender(String type,double amount,String phoneNumber)
+        {
+            this.type=type;
+            this.phoneNumber=phoneNumber;
+            this.amount=amount;
+        }
+
+        @Override
+        public SmsRequest call() {
+
+            String message = "Your Account has been "+type+"ed by $" + amount + " for a Transaction made on the Simple " +
                     "Payment App";
 
-            String credit = "Your Account has been credited by $" + transactionForm.getAmount() + " for a Transaction made on the Simple " +
-                    "Payment App";
 
+            SmsRequest smsRequest = new SmsRequest(phoneNumber, message);
 
-            String debitNumber = accountsRepository.findByName(transactionForm.getFrom()).get().getPhoneNumber();
-            String creditNumber = accountsRepository.findByName(transactionForm.getTo()).get().getPhoneNumber();
+            return restTemplate.postForObject("http://twilio-messaging-service/api/v1/sms", smsRequest, SmsRequest.class);
 
-            SmsRequest debited = new SmsRequest(debitNumber, debit);
-            SmsRequest credited = new SmsRequest(creditNumber, credit);
-
-            restTemplate.postForObject("http://twilio-messaging-service/api/v1/sms", debited, SmsRequest.class);
-
-            restTemplate.postForObject("http://twilio-messaging-service/api/v1/sms", credited, SmsRequest.class);
-
-
+        }
     }
 }
