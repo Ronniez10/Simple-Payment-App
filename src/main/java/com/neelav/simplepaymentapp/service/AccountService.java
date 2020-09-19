@@ -4,5 +4,5 @@ import com.neelav.simplepaymentapp.model.TransactionForm;
 
 public interface AccountService {
 
-    boolean updateAccounts(TransactionForm transactionForm);
+    boolean updateAccounts(TransactionForm transactionForm) throws InterruptedException;
 }

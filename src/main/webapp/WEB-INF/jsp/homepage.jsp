@@ -109,7 +109,7 @@ prefix="form" uri="http://www.springframework.org/tags/form" %>
                 <c:param name="accountId" value="${tempAccount.id }" />
               </c:url>
 
-              <c:url var="accountDetails" value="bank/customer/">
+              <c:url var="accountDetails" value="bank/customer">
                 <c:param name="accountId" value="${tempAccount.id }" />
               </c:url>
 			  <tbody>
